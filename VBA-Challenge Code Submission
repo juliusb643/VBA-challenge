@@ -1,0 +1,77 @@
+Sub AlphabeticalTesting()
+
+Dim ws As Worksheet
+
+For Each ws In Worksheets
+
+Total = 0
+percentChange = 0
+SummaryRow = 2
+j = 0
+
+Range("I1").Value = "Ticker"
+Range("J1").Value = "Yearly Change"
+Range("K1").Value = "Percent Change"
+Range("L1").Value = "Total Stock Volume"
+Range("P1").Value = "Ticker"
+Range("Q1").Value = "Value"
+Range("O2").Value = "Greatest % Increase"
+Range("O3").Value = "Greatest % Decrease"
+Range("O4").Value = "Greatest Total Volume"
+
+RowCount = Cells(Rows.Count, "A").End(xlUp).Row
+
+For CurrentRow = 2 To RowCount
+
+    Total = Total + Cells(CurrentRow, 7).Value
+    
+    If Range("A" & CurrentRow).Value <> Range("A" & CurrentRow - 1).Value Then
+        Ticker = Range("A" & CurrentRow).Value
+        Range("I" & SummaryRow).Value = Ticker
+    End If
+
+    If Range("A" & CurrentRow).Value <> Range("A" & CurrentRow + 1).Value Then
+        SummaryRow = SummaryRow + 1
+    End If
+
+    If Range("A" & CurrentRow).Value <> Range("A" & CurrentRow - 1).Value Then
+        OpenPrice = Range("C" & CurrentRow).Value
+        ClosePrice = Range("F" & CurrentRow).Value
+    End If
+    
+    If Range("J" & SummaryRow).Value = OpenPrice Then
+        Range("J" & SummaryRow).Value = ClosePrice
+        Range("J" & SummaryRow).Value = YearlyChange
+        YearlyChange = (OpenPrice - ClosePrice)
+    End If
+    
+    If Range("A" & CurrentRow).Value <> Range("A" & CurrentRow + 1) Then
+        TotalStockVolume = Range("G" & CurrentRow).Value
+        Range("G" & CurrentRow).Value = TotalStockVolume
+    End If
+    
+  
+    YearlyChange = (Cells(CurrentRow, 6) - Cells(SummaryRow, 3))
+    percentChange = (YearlyChange / Cells(SummaryRow, 3)) * 100
+    
+   
+    Start = CurrentRow + 1
+ 
+    Range("I" & 2 + j).Value = Cells(CurrentRow, 1).Value
+    Range("J" & 2 + j).Value = YearlyChange
+    Range("J" & 2 + j).NumberFormat = "0.00"
+    Range("K" & 2 + j).Value = percentChange
+    Range("K" & 2 + j).NumberFormat = "0.00%"
+    Range("L" & 2 + j).Value = Total
+    
+    Total = 0
+    YearlyChange = 0
+    j = j + 1
+    
+Next CurrentRow
+
+Next
+
+End Sub
+
+
